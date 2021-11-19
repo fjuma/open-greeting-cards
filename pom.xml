@@ -19,7 +19,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wildfly.security.examples</groupId>
     <artifactId>open-greeting-card</artifactId>
-    <version>1.0.0.Alpha1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <version>1.0.0</version>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -69,6 +70,7 @@
 
         <jboss.developer.drupal.url>http://rhdp-drupal.stage.redhat.com/</jboss.developer.drupal.url>
         <linkXRef>false</linkXRef>
+        <version.war.plugin>3.2.3</version.war.plugin>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +85,41 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <!-- When built in OpenShift the 'openshift' profile will be
+                used when invoking mvn. -->
+            <!-- Use this profile for any OpenShift specific customization
+                your app will ne    ed. -->
+            <!-- By default that is to put the resulting archive into the
+                'deployments' folder. -->
+            <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
+            <id>openshift</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>${version.war.plugin}</version>
+                        <configuration>
+                            <warName>ROOT</warName>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
